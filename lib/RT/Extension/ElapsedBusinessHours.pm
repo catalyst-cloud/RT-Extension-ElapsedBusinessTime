@@ -29,17 +29,17 @@ sub calc {
 
     my $transactions = $args{Ticket}->Transactions;
     while (my $trans = $transactions->Next) {
-        RT->Logger->error("Ticket: ", $trans->ObjectId, ", Transaction: ", $trans->id, ", Type: ". $trans->Type);
+#        RT->Logger->debug("Ticket: ", $trans->ObjectId, ", Transaction: ", $trans->id, ", Type: ". $trans->Type);
         if ($trans->Type eq 'Status') {
-            RT->Logger->error("Field: ", $trans->Field, ", Old: ", $trans->OldValue, ", New: ". $trans->NewValue, ", Created: ", $trans->CreatedObj->W3CDTF);
+#            RT->Logger->debug("Field: ", $trans->Field, ", Old: ", $trans->OldValue, ", New: ". $trans->NewValue, ", Created: ", $trans->CreatedObj->W3CDTF);
             if ($clock_running && $excluded_states->includes($trans->NewValue)) {
-                RT->Logger->error("  excluded state, stop the clock!");
+#                RT->Logger->debug("  excluded state, stop the clock!");
                 $clock_running = 0;
 
                 $elapsed_business_time += calc_elapsed($last_state_change, $trans->CreatedObj)
 
             } elsif (! $clock_running && ! $excluded_states->includes($trans->NewValue)) {
-                RT->Logger->error("  included state, start the clock!");
+#                RT->Logger->debug("  included state, start the clock!");
                 $clock_running = 1;
                 $last_state_change = $trans->CreatedObj;
             }
@@ -47,10 +47,10 @@ sub calc {
     };
 
     if ($clock_running) {
-        RT->Logger->error("  clock still running, but no more transactions, add to now");
+#        RT->Logger->debug("  clock still running, but no more transactions, add to now");
         my $now = RT::Date->new($args{CurrentUser}->UserObj);
         $now->SetToNow;
-RT->Logger->error("  last_state_change: ", $last_state_change->W3CDTF, ", now: ", $now->W3CDTF);
+#        RT->Logger->debug("  last_state_change: ", $last_state_change->W3CDTF, ", now: ", $now->W3CDTF);
         $elapsed_business_time += calc_elapsed($last_state_change, $now)
     }
 
@@ -81,69 +81,62 @@ sub calc_elapsed {
 
     $last_state_change = $current_date;
 
-    RT->Logger->debug("trying to add time from ", $dt_working->strftime("%FT%T %Z"), " until ", $dt_current_date->strftime("%FT%T %Z"));
+#    RT->Logger->debug("trying to add time from ", $dt_working->strftime("%FT%T %Z"), " until ", $dt_current_date->strftime("%FT%T %Z"));
 
     while ($dt_working < $dt_current_date) {
 
         if ($not_business_days->includes($dt_working->day_of_week)) {
-            RT->Logger->debug("Not business day (", $dt_working->ymd, "), skip");
+#            RT->Logger->debug("Not business day (", $dt_working->ymd, "), skip");
             next;
         }
 
         my ($year, $month, $day) = split(/-/, $dt_working->ymd);
         if ($dh->is_holiday(year => $year, month => $month, day => $day, region => $region)) {
-            RT->Logger->debug("holiday (", $dt_working->ymd, "), skip");
+#            RT->Logger->debug("holiday (", $dt_working->ymd, "), skip");
             next;
         }
-
-# If time is before 9am, continue
-# If time is after 5pm, set end time to 5pm.
-# If time is before 5pm, set end time to time
-# elapsed_business_seconds += end time - 9am
-# continue
 
         my $day_start;
         if (defined $start_time && $start_time =~ /^(\d+)(?::(\d+)(?::(\d+))?)?$/) {
             my $bus_start_time = $dt_working->clone;
-            RT->Logger->debug("bus_start_time TZ: " . $bus_start_time->time_zone_short_name());
          
             $bus_start_time->set_hour($1);
             $bus_start_time->set_minute($2 || 0);
             $bus_start_time->set_second($3 || 0);
 
             if ($dt_current_date <= $bus_start_time) {
-                RT->Logger->debug("end of work is before business day begins, skip");
+#                RT->Logger->debug("end of work is before business day begins, skip");
                 next;
             } elsif ($dt_working > $bus_start_time) {
-                RT->Logger->debug("start of work is after business day begins");
+#                RT->Logger->debug("start of work is after business day begins");
                 $day_start = $dt_working;
             } else {
-                RT->Logger->debug("start of work is before business day begins");
+#                RT->Logger->debug("start of work is before business day begins");
                 $day_start = $bus_start_time;
             }
         }
 
-        RT->Logger->debug("going to add time for: (", $dt_working->ymd, ")");
+#        RT->Logger->debug("going to add time for: (", $dt_working->ymd, ")");
 
         my $day_end;
         if (defined $end_time && $end_time =~ /^(\d+)(?::(\d+)(?::(\d+))?)?$/) {
             my $bus_end_time = $dt_working->clone;
-            RT->Logger->debug("bus_end_time TZ: " . $bus_end_time->time_zone_short_name());
+
             $bus_end_time->set_hour($1);
             $bus_end_time->set_minute($2 || 0);
             $bus_end_time->set_second($3 || 0);
 
             if ($dt_current_date <= $bus_end_time) {
-                RT->Logger->debug("end of work is before business day ends");
+#                RT->Logger->debug("end of work is before business day ends");
                 $day_end = $dt_current_date;
             } else {
-                RT->Logger->debug("end of work is after business day ends, or another day, use $end_time");
+#                RT->Logger->debug("end of work is after business day ends, or another day, use $end_time");
                 $day_end = $bus_end_time;
             }
         }
 
         my $delta = $day_end - $day_start;
-RT->Logger->error("  day_start: ", $day_start->datetime, ", day_end: ", $day_end->datetime, ", delta: ", $delta->deltas, ", running elapsed_business_time: $elapsed_business_time");
+#        RT->Logger->debug("  day_start: ", $day_start->strftime("%FT%T %Z"), ", day_end: ", $day_end->strftime("%FT%T %Z"), ", delta: ", $delta->deltas, ", running elapsed_business_time: $elapsed_business_time");
 
         # We'll ignore leap seconds.
         my ($minutes, $seconds) = $delta->in_units('minutes', 'seconds');
@@ -153,7 +146,6 @@ RT->Logger->error("  day_start: ", $day_start->datetime, ", day_end: ", $day_end
         $dt_working->set( hour => 0, minute => 0, second => 0 );
     }
 
-RT->Logger->error("  running elapsed_business_time: $elapsed_business_time");
     return $elapsed_business_time;
 }
 
