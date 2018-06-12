@@ -21,7 +21,7 @@ our $dh = Date::Holidays->new(
 
 sub calc {
     my $class = shift;
-    my %args = ( Ticket => undef, CurrentUser => undef, @_);
+    my %args = ( Ticket => undef, CurrentUser => undef, DurationAsString => 0, Show => 4, Short => 1, @_);
 
     my $elapsed_business_time = 0;
     my $last_state_change = $args{Ticket}->CreatedObj;
@@ -54,7 +54,15 @@ RT->Logger->error("  last_state_change: ", $last_state_change->W3CDTF, ", now: "
         $elapsed_business_time += calc_elapsed($last_state_change, $now)
     }
 
-    return $elapsed_business_time;
+    if ($args{DurationAsString}) {
+        return $last_state_change->DurationAsString(
+            $elapsed_business_time,
+            Show => $args{Show},
+            Short => $args{Short},
+        );
+    } else {
+        return sprintf("%d:%02d", int($elapsed_business_time / 60), $elapsed_business_time % 60);
+    }
 }
 
 sub calc_elapsed {
@@ -136,7 +144,10 @@ sub calc_elapsed {
 
         my $delta = $day_end - $day_start;
 RT->Logger->error("  day_start: ", $day_start->datetime, ", day_end: ", $day_end->datetime, ", delta: ", $delta->deltas, ", running elapsed_business_time: $elapsed_business_time");
-        $elapsed_business_time += $delta->in_units('minutes');
+
+        # We'll ignore leap seconds.
+        my ($minutes, $seconds) = $delta->in_units('minutes', 'seconds');
+        $elapsed_business_time += ($minutes * 60) + $seconds;
     } continue {
         $dt_working->add( days => 1 );
         $dt_working->set( hour => 0, minute => 0, second => 0 );
