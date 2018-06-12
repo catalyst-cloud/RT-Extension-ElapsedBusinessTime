@@ -6,6 +6,7 @@ use RT::Extension::ElapsedBusinessTime;
 our $VERSION = '0.1';
 
 use Set::Object;
+use Try::Tiny;
 
 our $start_time = '08:30';
 our $end_time   = '17:30';
@@ -14,10 +15,18 @@ our $country  = 'NZ';
 our $region = 'Wellington';
 our $excluded_states = Set::Object->new('stalled', 'blocked', 'resolved', 'rejected', 'deleted');
 
-use Date::Holidays;
-our $dh = Date::Holidays->new(
-    countrycode => $country,
-);
+our $dh = undef;
+try {
+    use Date::Holidays;
+    $dh = Date::Holidays->new(
+        countrycode => $country,
+    );
+
+    $dh->is_holiday(2017, 1, 1);
+} catch {
+    RT->Logger->error("Unable to instantiate Date::Holidays: $_");
+    $dh = undef;
+};
 
 sub calc {
     my $class = shift;
@@ -91,7 +100,7 @@ sub calc_elapsed {
         }
 
         my ($year, $month, $day) = split(/-/, $dt_working->ymd);
-        if ($dh->is_holiday(year => $year, month => $month, day => $day, region => $region)) {
+        if (defined $dh && $dh->is_holiday(year => $year, month => $month, day => $day, region => $region)) {
 #            RT->Logger->debug("holiday (", $dt_working->ymd, "), skip");
             next;
         }
