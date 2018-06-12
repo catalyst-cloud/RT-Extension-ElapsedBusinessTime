@@ -1,8 +1,8 @@
 <%init>
 RT->Logger->error("Adding ElapsedBusinessTime to COLUMN_MAP");
-$COLUMN_MAP->{'ElapsedBusinessHours'} = {
-    title     => 'Elapsed Business Time', # loc
-    attribute => 'Elapsed Business Time',
+$COLUMN_MAP->{'ElapsedBusinessMinutes'} = {
+    title     => 'Elapsed Business (Min)', # loc
+    attribute => 'Elapsed Business (Min)',
     value     => sub {
         my $ticket  = shift;
 
@@ -11,6 +11,21 @@ $COLUMN_MAP->{'ElapsedBusinessHours'} = {
         return RT::Extension::ElapsedBusinessTime->calc(
             Ticket      => $ticket,
             CurrentUser => $session{CurrentUser},
+        );
+    }
+};
+$COLUMN_MAP->{'ElapsedBusinessTime'} = {
+    title     => 'Elapsed Business', # loc
+    attribute => 'Elapsed Business',
+    value     => sub {
+        my $ticket  = shift;
+
+        use RT::Extension::ElapsedBusinessTime;
+
+        return RT::Extension::ElapsedBusinessTime->calc(
+            Ticket      => $ticket,
+            CurrentUser => $session{CurrentUser},
+            DurationAsString => 1,
         );
     }
 };

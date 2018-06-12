@@ -1,6 +1,6 @@
 <%INIT>
 RT->Logger->error("Adding ElapsedBusinessTime to fields");
-push @{$Fields}, 'ElapsedBusinessTime';
+push @{$Fields}, 'ElapsedBusinessMinutes', 'ElapsedBusinessTime';
 </%INIT>
 <%ARGS>
 $Fields => undef
