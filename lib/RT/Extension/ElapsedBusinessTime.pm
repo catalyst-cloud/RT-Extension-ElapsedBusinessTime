@@ -1,7 +1,7 @@
 use warnings;
 use strict;
 
-use RT::Extension::ElapsedBusinessHours;
+use RT::Extension::ElapsedBusinessTime;
 
 our $VERSION = '0.1';
 
