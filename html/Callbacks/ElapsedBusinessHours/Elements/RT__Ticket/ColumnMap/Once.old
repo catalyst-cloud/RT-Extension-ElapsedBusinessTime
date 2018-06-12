@@ -1,0 +1,110 @@
+<%init>
+RT->Logger->error("Adding ElapsedBusinessHours to COLUMN_MAP");
+$COLUMN_MAP->{'ElapsedBusinessHours'} = {
+    title     => 'Elapsed Business Hours', # loc
+    attribute => 'Elapsed Business Hours',
+    value     => sub {
+        my $ticket  = shift;
+
+        use Set::Object;
+
+        my $started = $ticket->Created;
+        my $transactions = $ticket->Transactions;
+        my $start_time = '08:30';
+        my $end_time   = '17:30';
+        my $not_business_days = Set::Object->new(6, 7); # 6 = Saturday, 7 = Sunday, see DateTime
+        my $country  = 'NZ';
+        my $region = 'Wellington';
+        my $excluded_states = Set::Object->new('stalled', 'blocked', 'resolved', 'rejected', 'deleted');
+        my $elapsed_business_minutes = 0;
+        my $last_state_change_time;
+        my $clock_running = 1;
+
+        use Date::Holidays;
+        my $dh = Date::Holidays->new(
+            countrycode => $country,
+        );
+
+
+        while (my $trans = $transactions->Next) {
+            RT->Logger->error("Ticket: ", $trans->ObjectId, ", Transaction: ", $trans->id, ", Type: ". $trans->Type);
+            if ($trans->Type eq 'Status') {
+                $last_state_change_time //= $trans->CreatedObj;
+
+                RT->Logger->error("Field: ", $trans->Field, ", Old: ", $trans->OldValue, ", New: ". $trans->NewValue, ", Created: ", $trans->Created);
+                if ($clock_running && $excluded_states->includes($trans->NewValue)) {
+                    RT->Logger->error("  excluded state, stop the clock!");
+                    $clock_running = 0;
+
+                    # Work out the difference between $last_state_change_time and $trans->Created counting only business hours and skipping weekends and holidays. How hard can that be?!;
+                    my $working = $last_state_change_time;
+                    $last_state_change_time = $trans->CreatedObj;
+
+                    while ($working->Unix < $trans->CreatedObj->Unix) {
+                        if ($not_business_days->includes($working->DateTimeObj->day_of_week)) {
+                            RT->Logger->debug("Not business day, skip");
+                            next;
+                        }
+
+                        my ($year, $month, $day) = split(/-/, $working->Date);
+                        if ($dh->is_holiday(year => $year, month => $month, day => $day, region => $region)) {
+                            RT->Logger->debug("holiday, skip");
+                            next;
+                        }
+
+# If time is before 9am, continue
+# If time is after 5pm, set end time to 5pm.
+# If time is before 5pm, set end time to time
+# elapsed_business_seconds += end time - 9am
+# continue
+                        my $dt = $trans->CreatedObj->DateTimeObj;
+
+                        my $day_start;
+                        if (defined $start_time && $start_time =~ /^(\d+)(?::(\d+)(?::(\d+))?)?$/) {
+                            my $bus_start_time = $dt->clone;
+                            $bus_start_time->set_hour($1);
+                            $bus_start_time->set_minute($2 || 0);
+                            $bus_start_time->set_second($3 || 0);
+
+                            if ($dt <= $bus_start_time) {
+                                next;
+                            }
+
+                            $day_start = $bus_start_time;
+                        }
+
+                        my $day_end;
+                        if (defined $end_time && $end_time =~ /^(\d+)(?::(\d+)(?::(\d+))?)?$/) {
+                            my $bus_end_time = $dt->clone;
+                            $bus_end_time->set_hour($1);
+                            $bus_end_time->set_minute($2 || 0);
+                            $bus_end_time->set_second($3 || 0);
+
+                            if ($dt <= $bus_end_time) {
+                                $day_end = $dt;
+                            } else {
+                                $day_end = $bus_end_time;
+                            }
+                        }
+
+                        my $delta = $day_end - $day_start;
+                        $elapsed_business_minutes += $delta->in_units('minutes');
+                            RT->Logger->error("day_end: $day_end, day_start: $day_start, delta: ", $delta->deltas, ", minutes: ", $delta->in_units('minutes'), ", cumulative seconds: $elapsed_business_minutes");
+                    } continue {
+                        $working->AddDay;
+                        $working->SetToMidnight;
+                    }
+                } elsif (! $clock_running && ! $excluded_states->includes($trans->NewValue)) {
+                    RT->Logger->error("  included state, start the clock!");
+                    $clock_running = 1;
+                    $last_state_change_time = $trans->CreatedObj;
+                }
+            }
+        };
+        return $elapsed_business_minutes;
+    }
+};
+</%init>
+<%args>
+$COLUMN_MAP
+</%args>

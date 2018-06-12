@@ -1,0 +1,20 @@
+<%init>
+RT->Logger->error("Adding ElapsedBusinessHours to COLUMN_MAP");
+$COLUMN_MAP->{'ElapsedBusinessHours'} = {
+    title     => 'Elapsed Business Hours', # loc
+    attribute => 'Elapsed Business Hours',
+    value     => sub {
+        my $ticket  = shift;
+
+        use RT::Extension::ElapsedBusinessHours;
+
+        return RT::Extension::ElapsedBusinessHours->calc(
+            Ticket      => $ticket,
+            CurrentUser => $session{CurrentUser},
+        );
+    }
+};
+</%init>
+<%args>
+$COLUMN_MAP
+</%args>
