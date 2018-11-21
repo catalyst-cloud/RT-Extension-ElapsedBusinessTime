@@ -22,7 +22,7 @@ try {
         countrycode => $country,
     );
 
-    $dh->is_holiday(2017, 1, 1);
+    $dh->is_holiday(year => 2017, month => 1, day => 1);
 } catch {
     RT->Logger->error("Unable to instantiate Date::Holidays: $_");
     $dh = undef;
@@ -30,7 +30,15 @@ try {
 
 sub calc {
     my $class = shift;
-    my %args = ( Ticket => undef, CurrentUser => undef, DurationAsString => 0, Show => 4, Short => 1, @_);
+    my %args = (
+        Ticket => undef,
+        CurrentUser => undef,
+        DurationAsString => 0,
+        Show => 4,
+        Short => 1,
+        Units => 'Minute',
+        @_
+    );
 
     my $elapsed_business_time = 0;
     my $last_state_change = $args{Ticket}->CreatedObj;
@@ -70,7 +78,13 @@ sub calc {
             Short => $args{Short},
         );
     } else {
-        return sprintf("%d:%02d", int($elapsed_business_time / 60), $elapsed_business_time % 60);
+        if ($args{Units} eq 'Hour') {
+            return sprintf("%d:%02d", int($elapsed_business_time / 3600), $elapsed_business_time % 3600);
+        } elsif ($args{Units} eq 'Second') {
+            return $elapsed_business_time;
+        } else {
+            return sprintf("%d:%02d", int($elapsed_business_time / 60), $elapsed_business_time % 60);
+        }
     }
 }
 
