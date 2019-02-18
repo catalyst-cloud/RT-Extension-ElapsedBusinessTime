@@ -2,4 +2,4 @@ debhelper-build-stamp
 files
 *.debhelper.log
 *.substvars
-rt4-extension-assetautoname/
+rt4-extension-elapsedbusinesstime/
