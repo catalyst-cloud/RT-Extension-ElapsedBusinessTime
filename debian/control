@@ -1,0 +1,20 @@
+Source: rt-extension-elapsedbusinesstime
+Section: perl
+Priority: optional
+Maintainer: Andrew Ruthven <andrew@etc.gen.nz>
+Build-Depends: debhelper (>= 9.20120312)
+Build-Depends-Indep: perl
+Standards-Version: 3.9.8
+Vcs-Git: https://salsa.debian.org/request-tracker-team/rt-extension-elapsedbusinesstime.git
+Vcs-Browser: https://salsa.debian.org/request-tracker-team/rt-extension-elapsedbusinesstime
+Homepage: https://metacpan.org/release/RT-Extension-ElapsedBusinessTime
+
+Package: rt4-extension-elapsedbusinesstime
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends},
+ request-tracker4,
+ perl,
+Description: ElapsedBusinessTime extension (Request Tracker)
+ This extension adds a counter for elapsed business time in reports for tickets
+ to Request Tracker.
+ .

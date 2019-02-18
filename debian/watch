@@ -1,0 +1,2 @@
+version=3
+https://metacpan.org/release/RT-Extension-ElapsedBusinessTime   .*/RT-Extension-ElapsedBusinessTime-v?(\d[\d.-]*)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)$
