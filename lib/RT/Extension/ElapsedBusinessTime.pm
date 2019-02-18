@@ -105,7 +105,7 @@ to their ticket duration time.
 
 =head1 AUTHOR
 
-Andrew Ruthven, Catalyst Cloud Ltd E<lt>puck@catalystcloud.nz<gt>
+Andrew Ruthven, Catalyst Cloud Ltd E<lt>puck@catalystcloud.nzE<gt>
 
 =for html <p>All bugs should be reported via email to <a
 href="mailto:bug-RT-Extension-ElapsedBusinessTime@rt.cpan.org">bug-RT-Extension-ElapsedBusinessTime@rt.cpan.org</a>
