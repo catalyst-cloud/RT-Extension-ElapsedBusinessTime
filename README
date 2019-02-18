@@ -51,7 +51,7 @@ CONFIGURATION
         writing one! For example 'NZ' for New Zealand.
 
     Region
-        Some country modules for Data::Holidays include regions for regional
+        Some country modules for Date::Holidays include regions for regional
         holidays. For example 'Wellington' within New Zealand for Wellington
         Anniversary Day.
 
