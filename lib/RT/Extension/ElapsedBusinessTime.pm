@@ -136,7 +136,8 @@ our $end_time   = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'End'}  
 
 # 6 = Saturday, 7 = Sunday, see DateTime
 our $not_business_days = Set::Object->new(
-  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude Days'} || (6, 7);
+  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude Days'} || (6, 7)
+);
 
 # Set no default!
 our $country = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Country'};
