@@ -8,12 +8,21 @@ our $VERSION = '0.1';
 use Set::Object;
 use Try::Tiny;
 
-our $start_time = '08:30';
-our $end_time   = '17:30';
-our $not_business_days = Set::Object->new(6, 7); # 6 = Saturday, 7 = Sunday, see DateTime
-our $country  = 'NZ';
-our $region = 'Wellington';
-our $excluded_states = Set::Object->new('stalled', 'blocked', 'resolved', 'rejected', 'deleted');
+our $start_time = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Start'} || '08:30';
+our $end_time   = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'End'}   || '17:30';
+
+# 6 = Saturday, 7 = Sunday, see DateTime
+our $not_business_days = Set::Object->new(
+  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude Days'} || (6, 7);
+
+# Set no default!
+our $country = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Country'};
+our $region  = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Region'};
+
+our $excluded_states = Set::Object->new(
+  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude States'}
+  || ('stalled', 'blocked', 'resolved', 'rejected', 'deleted')
+);
 
 our $dh = undef;
 try {
