@@ -5,6 +5,129 @@ use RT::Extension::ElapsedBusinessTime;
 
 our $VERSION = '0.1';
 
+=head1 NAME
+
+RT-Extension-ElapsedBusinessTime - Calculate elapsed business time for tickets
+
+=head1 DESCRIPTION
+
+This extension provides for a field in reports that displays the elapsed
+business time that a ticket has been open. Various items are configurable
+to define what a business day is considered.
+
+=head1 RT VERSION
+
+Works with RT 4.4.x, not tested with 4.6.x yet.
+
+=head1 INSTALLATION
+
+=over
+
+=item C<perl Makefile.PL>
+
+=item C<make>
+
+=item C<make install>
+
+May need root permissions
+
+=item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
+
+Add this line:
+
+    Plugin('RT::Extension::ElapsedBusinessTime');
+
+=item Clear your mason cache
+
+    rm -rf /opt/rt4/var/mason_data/obj
+
+=item Restart your webserver
+
+=back
+
+=head1 CONFIGURATION
+
+The available configuration options, with their defaults are given here.
+
+    Set( %ElapsedBussinessTime,
+        Start   => '08:30',
+        End     => '17:30',
+        Country => '',
+        Region  => '',
+        'Exclude Days'   => (6, 7),
+        'Exclude States' => ('stalled', 'blocked', 'resolved', 'rejected', 'deleted'),
+    );
+  
+Options are:
+
+=over
+
+=item Start
+
+The start of the business day.
+
+=item End
+
+The end of the business day.
+
+=item Country
+
+A country for which there is a Date::Holidays module which describes the
+holidays for that country. If there isn't one, please consider writing one!
+For example 'NZ' for New Zealand.
+
+=item Region
+
+Some country modules for Data::Holidays include regions for regional holidays.
+For example 'Wellington' within New Zealand for Wellington Anniversary Day.
+
+=item Excluded Days
+
+Days which should not be considered working days. The day numbers are from
+DateTime. For reference they are:
+
+    1: Monday
+    2: Tuesday
+    3: Wednesday
+    4: Thursday
+    5: Friday
+    6: Saturday
+    7: Sunday
+
+=item Excluded States
+
+Which a ticket is in one of these states, then it is considered inactive
+and the counter stops. This is to allow when a ticket is waiting on a
+customers feedback, and for some businesses, that time shouldn't be added
+to their ticket duration time.
+
+=back
+
+=head1 AUTHOR
+
+Andrew Ruthven, Catalyst Cloud Ltd E<lt>puck@catalystcloud.nz<gt>
+
+=for html <p>All bugs should be reported via email to <a
+href="mailto:bug-RT-Extension-ElapsedBusinessTime@rt.cpan.org">bug-RT-Extension-ElapsedBusinessTime@rt.cpan.org</a>
+or via the web at <a
+href="http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-ElapsedBusinessTime">rt.cpan.org</a>.</p>
+
+=for text
+    All bugs should be reported via email to
+        bug-RT-Extension-ElapsedBusinessTime@rt.cpan.org
+    or via the web at
+        http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-ElapsedBusinessTime
+
+=head1 LICENSE AND COPYRIGHT
+
+This software is Copyright (c) 2019 by Catalyst Cloud Ltd
+
+This is free software, licensed under:
+
+  The GNU General Public License, Version 2, June 1991
+
+=cut
+
 use Set::Object;
 use Try::Tiny;
 
