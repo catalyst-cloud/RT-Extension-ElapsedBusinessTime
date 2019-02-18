@@ -49,7 +49,7 @@ Add this line:
 
 The available configuration options, with their defaults are given here.
 
-    Set( %ElapsedBussinessTime,
+    Set( %ElapsedBusinessTime,
         Start   => '08:30',
         End     => '17:30',
         Country => '',
