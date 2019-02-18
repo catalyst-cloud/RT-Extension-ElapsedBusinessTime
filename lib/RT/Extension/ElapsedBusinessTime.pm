@@ -78,7 +78,7 @@ For example 'NZ' for New Zealand.
 
 =item Region
 
-Some country modules for Data::Holidays include regions for regional holidays.
+Some country modules for Date::Holidays include regions for regional holidays.
 For example 'Wellington' within New Zealand for Wellington Anniversary Day.
 
 =item Excluded Days
