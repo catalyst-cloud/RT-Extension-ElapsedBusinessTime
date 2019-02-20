@@ -7,13 +7,13 @@ our $VERSION = '0.1';
 
 =head1 NAME
 
-RT-Extension-ElapsedBusinessTime - Calculate elapsed business time for tickets
+RT-Extension-ElapsedBusinessTime - Calculate the elapsed business time that tickets are open
 
 =head1 DESCRIPTION
 
-This extension provides for a field in reports that displays the elapsed
+This extension provides for new colummns in reports that display the elapsed
 business time that a ticket has been open. Various items are configurable
-to define what a business day is considered.
+to define what constitutes a business day.
 
 =head1 RT VERSION
 
@@ -52,10 +52,10 @@ The available configuration options, with their defaults are given here.
     Set( %ElapsedBusinessTime,
         Start   => '08:30',
         End     => '17:30',
-        Country => '',
-        Region  => '',
-        'Exclude Days'   => (6, 7),
-        'Exclude States' => ('stalled', 'blocked', 'resolved', 'rejected', 'deleted'),
+        Country => undef,
+        Region  => undef,
+        'Exclude Days'   => [6, 7],
+        'Exclude States' => ['stalled', 'blocked', 'resolved', 'rejected', 'deleted'],
     );
   
 Options are:
@@ -100,6 +100,21 @@ Which a ticket is in one of these states, then it is considered inactive
 and the counter stops. This is to allow when a ticket is waiting on a
 customers feedback, and for some businesses, that time shouldn't be added
 to their ticket duration time.
+
+=back
+
+=head1 DISPLAY COLUMNS
+
+There are three display columns which this extension adds, which all show
+the same information, just in different formats:
+
+=over
+
+=item ElapsedBussinessHours
+
+=item ElapsedBussinessMinutes
+
+=item ElapsedBussinessTime
 
 =back
 
