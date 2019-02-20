@@ -131,21 +131,21 @@ This is free software, licensed under:
 use Set::Object;
 use Try::Tiny;
 
-our $start_time = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Start'} || '08:30';
-our $end_time   = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'End'}   || '17:30';
+my $ebt_config = RT->Config->Get('ElapsedBusinessTime') || {};
+our $start_time = $ebt_config->{'Start'} || '08:30';
+our $end_time   = $ebt_config->{'End'}   || '17:30';
 
 # 6 = Saturday, 7 = Sunday, see DateTime
 our $not_business_days = Set::Object->new(
-  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude Days'} || (6, 7)
+  @{$ebt_config->{'Exclude Days'} || [6, 7]}
 );
 
 # Set no default!
-our $country = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Country'};
-our $region  = RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Region'};
+our $country = $ebt_config->{'Country'};
+our $region  = $ebt_config->{'Region'};
 
 our $excluded_states = Set::Object->new(
-  RT->Config->Get('RT-Extension-ElapsedBusinessTime')->{'Exclude States'}
-  || ('stalled', 'blocked', 'resolved', 'rejected', 'deleted')
+  @{$ebt_config->{'Exclude States'} || ['stalled', 'blocked', 'resolved', 'rejected', 'deleted']}
 );
 
 our $dh = undef;
