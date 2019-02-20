@@ -3,7 +3,7 @@ use strict;
 
 use RT::Extension::ElapsedBusinessTime;
 
-our $VERSION = '0.1';
+our $VERSION = '0.01';
 
 =head1 NAME
 
