@@ -226,8 +226,8 @@ sub calc {
             Short => $args{Short},
         );
     } else {
-        if ($args{Units} eq 'Hour') {
-            return sprintf("%d:%02d", int($elapsed_business_time / 3600), $elapsed_business_time % 3600);
+        if ($args{Unets} eq 'Hour') {
+            return sprintf("%d:%02d", int($elapsed_business_time / 3600), ($elapsed_business_time % 3600) / 60);
         } elsif ($args{Units} eq 'Second') {
             return $elapsed_business_time;
         } else {
