@@ -12,6 +12,6 @@ rt-extension-elapsedbusinesstime (0.02-1) unstable; urgency=low
 
 rt-extension-elapsedbusinesstime (0.01-1) unstable; urgency=low
 
-  * Initial Release (Closes #xxx)
+  * Initial Release (Closes #960895)
 
  -- Andrew Ruthven <puck@catalystcloud.nz>  Mon, 18 Feb 2019 03:21:56 +0000
