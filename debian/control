@@ -18,6 +18,6 @@ Depends: ${misc:Depends}, ${perl:Depends},
  libtry-tiny-perl,
 Suggests: libdate-holidays-perl
 Description: ElapsedBusinessTime extension (Request Tracker)
- This extension adds a counter for elapsed business time in reports for tickets
- to Request Tracker.
+ This extension adds a fields for elapsed business time (general, and forced
+ into hours or minutes) in reports for tickets within Request Tracker.
  .
