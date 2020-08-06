@@ -3,7 +3,7 @@
 # This is to turn on verbose mode.
 # export DH_VERBOSE=1
 
-RTHOME=/usr/share/request-tracker4
+RTHOME=/usr/share/request-tracker5
 
 %:
 	dh $@
@@ -20,5 +20,5 @@ override_dh_auto_install-indep:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf MYMETA.yml Makefile4
+	rm -rf MYMETA.yml Makefile5
 

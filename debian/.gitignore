@@ -3,3 +3,4 @@ files
 *.debhelper.log
 *.substvars
 rt4-extension-elapsedbusinesstime/
+rt5-extension-elapsedbusinesstime/

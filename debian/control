@@ -9,10 +9,10 @@ Vcs-Git: https://salsa.debian.org/request-tracker-team/rt-extension-elapsedbusin
 Vcs-Browser: https://salsa.debian.org/request-tracker-team/rt-extension-elapsedbusinesstime
 Homepage: https://metacpan.org/release/RT-Extension-ElapsedBusinessTime
 
-Package: rt4-extension-elapsedbusinesstime
+Package: rt5-extension-elapsedbusinesstime
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
- request-tracker4,
+ request-tracker5,
  perl,
  libset-object-perl,
  libtry-tiny-perl,
