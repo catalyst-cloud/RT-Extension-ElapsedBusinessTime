@@ -1,23 +1,5 @@
-rt-extension-elapsedbusinesstime (0.03-2) unstable; urgency=medium
-
-  * Bump compat to v10.
-
- -- Andrew Ruthven <puck@catalyst.net.nz>  Wed, 13 May 2020 18:32:39 +0000
-
-rt-extension-elapsedbusinesstime (0.03-1) unstable; urgency=medium
-
-  * New upstream release.
-
- -- Andrew Ruthven <puck@catalystcloud.nz>  Mon, 08 Apr 2019 01:20:18 +0000
-
-rt-extension-elapsedbusinesstime (0.02-1) unstable; urgency=low
-
-  * New upstream release.
-
- -- Andrew Ruthven <puck@catalystcloud.nz>  Thu, 21 Feb 2019 21:00:25 +0000
-
-rt-extension-elapsedbusinesstime (0.01-1) unstable; urgency=low
+rt-extension-elapsedbusinesstime (0.04-1) unstable; urgency=low
 
   * Initial Release (Closes #960895)
 
- -- Andrew Ruthven <puck@catalystcloud.nz>  Mon, 18 Feb 2019 03:21:56 +0000
+ -- Andrew Ruthven <andrew@etc.gen.nz>  Thu, 06 Aug 2020 23:41:58 +1200
