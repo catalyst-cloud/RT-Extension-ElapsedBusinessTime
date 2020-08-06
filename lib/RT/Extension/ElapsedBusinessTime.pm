@@ -3,7 +3,7 @@ use strict;
 
 package RT::Extension::ElapsedBusinessTime;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
@@ -17,7 +17,7 @@ to define what constitutes a business day.
 
 =head1 RT VERSION
 
-Works with RT 4.4.x, not tested with 4.6.x yet.
+Works with RT 4.4.x and RT 5.0.x.
 
 =head1 INSTALLATION
 
@@ -135,7 +135,7 @@ href="http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-ElapsedBusin
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2019 by Catalyst Cloud Ltd
+This software is Copyright (c) 2019-2020 by Catalyst Cloud Ltd
 
 This is free software, licensed under:
 
