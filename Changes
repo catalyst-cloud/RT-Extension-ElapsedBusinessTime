@@ -1,0 +1,15 @@
+Revision history for RT-Extension-ElapsedBusinessTime
+
+0.04 2020-08-06
+ - Works on RT 5.0.0.
+ - Fix a typo of "Units" that stopped the Hours mode from working.
+
+0.03 2020-04-08
+ - When show Hours, we should show Minutes not Seconds.
+
+0.02 2020-02-21
+ - Brown paper bag release.
+ - Need to use "package" not "use"...
+
+0.01 2019-02-20
+ - Initial version
