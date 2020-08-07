@@ -1,5 +1,8 @@
 Revision history for RT-Extension-ElapsedBusinessTime
 
+0.05 2020-08-07
+ - Correctly handle Date::Holidays not being installed.
+
 0.04 2020-08-06
  - Works on RT 5.0.0.
  - Fix a typo of "Units" that stopped the Hours mode from working.

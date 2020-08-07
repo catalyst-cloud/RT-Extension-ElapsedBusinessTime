@@ -3,7 +3,7 @@ use strict;
 
 package RT::Extension::ElapsedBusinessTime;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 NAME
 
@@ -165,7 +165,7 @@ our $excluded_states = Set::Object->new(
 
 our $dh = undef;
 try {
-    use Date::Holidays;
+    require Date::Holidays;
     $dh = Date::Holidays->new(
         countrycode => $country,
     );
